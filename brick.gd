@@ -3,8 +3,10 @@ extends StaticBody2D
 @export var brick_width = 80.0
 @export var brick_height = 30.0
 @export var brick_color = Color.RED
-@export var hits_required = 1
-@export var money_value = 10
+
+# Don't export these - they should only be set by setup_brick()
+var hits_required = 1
+var money_value = 10
 
 signal destroyed
 signal money_dropped(amount, pos)

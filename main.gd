@@ -111,11 +111,14 @@ func create_bricks():
 			var hits_required = row + 1  # Row 0 = 1 hit, Row 1 = 2 hits, etc.
 			var money_value = (row + 1) * 10  # Row 0 = $10, Row 1 = $20, Row 2 = $30, etc.
 			
+			# Set up brick completely before adding to scene
 			brick.setup_brick(colors[row % colors.size()], hits_required, money_value)
 			brick.position = Vector2(
 				col * (brick_width + padding) + brick_width / 2 + padding,
 				row * (brick_height + padding) + brick_height / 2 + 50
 			)
+			
+			# Connect signals and add to scene
 			brick.destroyed.connect(_on_brick_destroyed)
 			brick.money_dropped.connect(_on_money_dropped)
 			bricks.append(brick)
