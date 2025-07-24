@@ -12,6 +12,7 @@ var has_fallen = false
 var current_speed = 0.0
 var speed_multiplier = 1.0
 var is_waiting_for_launch = false
+var recent_collisions = {}  # Track recent collisions to prevent duplicates
 
 func _ready():
 	# Calculate speed based on screen resolution for consistent gameplay
@@ -53,10 +54,11 @@ func _ready():
 	ball_material.friction = 0.0
 	physics_material_override = ball_material
 	
-	# Connect to collision signal
+	# Connect to collision signals - use both for web compatibility
 	contact_monitor = true
 	max_contacts_reported = 10
 	body_entered.connect(_on_body_entered)
+	body_shape_entered.connect(_on_body_shape_entered)
 	
 func start_ball():
 	# Reset all states
@@ -101,6 +103,23 @@ func get_current_speed() -> float:
 	return current_speed * speed_multiplier
 
 func _on_body_entered(body):
+	handle_collision(body)
+
+func _on_body_shape_entered(_body_rid, body, _body_shape_index, _local_shape_index):
+	# Alternative collision detection for web compatibility
+	handle_collision(body)
+
+func handle_collision(body):
+	# Prevent duplicate collision handling
+	var body_id = body.get_instance_id()
+	var current_time = Time.get_time_dict_from_system()
+	var time_key = current_time.hour * 3600 + current_time.minute * 60 + current_time.second
+	
+	if recent_collisions.has(body_id) and (time_key - recent_collisions[body_id]) < 1:
+		return  # Skip if collision happened within last second
+	
+	recent_collisions[body_id] = time_key
+	
 	if body.has_method("hit"):
 		body.hit()
 		brick_hit.emit(body)
@@ -132,3 +151,20 @@ func _physics_process(_delta):
 	# Keep ball speed constant at current level (only if not fallen)
 	if not has_fallen and linear_velocity.length() > 0:
 		linear_velocity = linear_velocity.normalized() * get_current_speed()
+	
+	# Backup collision detection for web compatibility
+	check_manual_collisions()
+
+func check_manual_collisions():
+	# Manual collision detection as backup for web builds
+	var space_state = get_world_2d().direct_space_state
+	var query = PhysicsPointQueryParameters2D.new()
+	query.position = global_position
+	query.collision_mask = collision_mask
+	query.exclude = [self]
+	
+	var result = space_state.intersect_point(query)
+	for collision in result:
+		var body = collision.collider
+		if body != self:
+			handle_collision(body)
