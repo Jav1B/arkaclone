@@ -63,7 +63,16 @@ func start_ball():
 	has_fallen = false
 	is_waiting_for_launch = false
 	speed_multiplier = 1.0
+	
+	# Make sure we're at the correct position before unfreezing
+	var screen_size = get_viewport().get_visible_rect().size
+	var target_position = Vector2(screen_size.x / 2, screen_size.y - 100)
+	global_position = target_position
+	
+	# Wait one frame for position to update, then unfreeze and launch
+	await get_tree().process_frame
 	freeze = false
+	
 	# Start the ball moving at an angle
 	var start_velocity = Vector2(randf_range(-1, 1), -1).normalized() * get_current_speed()
 	linear_velocity = start_velocity
@@ -74,13 +83,19 @@ func reset_for_new_life():
 	has_fallen = false
 	is_waiting_for_launch = true
 	speed_multiplier = 1.0
-	freeze = true
+	
+	# Stop all movement first
 	linear_velocity = Vector2.ZERO
 	angular_velocity = 0.0
+	freeze = true
 	
 	# Always position above paddle center
 	var screen_size = get_viewport().get_visible_rect().size
-	global_position = Vector2(screen_size.x / 2, screen_size.y - 100)
+	var target_position = Vector2(screen_size.x / 2, screen_size.y - 100)
+	global_position = target_position
+	
+	# Force position update by waiting a frame
+	await get_tree().process_frame
 
 func get_current_speed() -> float:
 	return current_speed * speed_multiplier

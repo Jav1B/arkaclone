@@ -107,22 +107,27 @@ func create_bricks():
 		for col in range(cols):
 			var brick = brick_scene.instantiate()
 			
-			# Progressive difficulty: each row deeper requires one more hit and gives more money
-			var hits_required = row + 1  # Row 0 = 1 hit, Row 1 = 2 hits, etc.
-			var money_value = (row + 1) * 10  # Row 0 = $10, Row 1 = $20, Row 2 = $30, etc.
+			# Progressive difficulty: bottom rows (where ball hits first) should be easier
+			var hits_required = rows - row  # Row 0 = 6 hits, Row 5 = 1 hit
+			var money_value = (rows - row) * 10  # Row 0 = $60, Row 5 = $10
 			
-			# Set up brick completely before adding to scene
-			brick.setup_brick(colors[row % colors.size()], hits_required, money_value)
+			
+			# Position the brick first
 			brick.position = Vector2(
 				col * (brick_width + padding) + brick_width / 2 + padding,
 				row * (brick_height + padding) + brick_height / 2 + 50
 			)
 			
-			# Connect signals and add to scene
+			# Add to scene tree first
+			add_child(brick)
+			
+			# Then set up brick after it's in the scene tree
+			brick.setup_brick(colors[row % colors.size()], hits_required, money_value)
+			
+			# Connect signals and add to tracking list
 			brick.destroyed.connect(_on_brick_destroyed)
 			brick.money_dropped.connect(_on_money_dropped)
 			bricks.append(brick)
-			add_child(brick)
 
 func _on_brick_hit(_brick):
 	score += 10

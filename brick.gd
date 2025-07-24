@@ -27,6 +27,7 @@ func _ready():
 	physics_material_override = brick_material
 	
 	# Don't call update_brick_appearance here - wait for setup_brick()
+	# Don't reset values here that might be set by setup_brick()
 
 func update_brick_appearance():
 	# Create a colored rectangle for the brick
@@ -45,6 +46,17 @@ func update_brick_appearance():
 	
 	texture.set_image(image)
 	sprite.texture = texture
+	
+	# Update the hit counter label
+	var label = $HitCountLabel
+	var remaining_hits = hits_required - current_hits
+	label.text = str(remaining_hits)
+	
+	# Make the text more visible based on brick color
+	if current_color.get_luminance() > 0.5:
+		label.modulate = Color.BLACK
+	else:
+		label.modulate = Color.WHITE
 
 func add_cracks_to_image(image: Image, damage_factor: float):
 	var width = int(brick_width)
