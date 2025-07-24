@@ -49,10 +49,22 @@ This project is configured to deploy automatically to Vercel.
 
 ### GitHub Actions Setup
 
-For automated builds, add these secrets to your GitHub repository:
-- `VERCEL_TOKEN`: Your Vercel token
-- `VERCEL_ORG_ID`: Your Vercel organization ID  
-- `VERCEL_PROJECT_ID`: Your Vercel project ID
+The workflow will automatically build the project. For automated Vercel deployment, add these secrets to your GitHub repository settings (Settings > Secrets and variables > Actions):
+
+1. **VERCEL_TOKEN**: 
+   - Go to https://vercel.com/account/tokens
+   - Create a new token
+   - Copy the token value
+
+2. **VERCEL_ORG_ID**: 
+   - In your Vercel dashboard, go to Settings > General
+   - Copy the "Team ID" (for personal accounts, this is your User ID)
+
+3. **VERCEL_PROJECT_ID**: 
+   - In your Vercel project dashboard, go to Settings > General  
+   - Copy the "Project ID"
+
+**Note**: If these secrets are not configured, the workflow will still build the project and upload the build artifacts, but won't deploy to Vercel automatically.
 
 ## Project Structure
 
