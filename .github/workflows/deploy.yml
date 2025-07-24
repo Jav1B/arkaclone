@@ -48,18 +48,15 @@ jobs:
     - name: Install Vercel CLI
       run: npm install -g vercel@latest
       
-    - name: Prepare deployment directory
-      run: |
-        mkdir -p deploy
-        cp -r dist/* deploy/
-        echo '{}' > deploy/package.json
-        echo '{"trailingSlash": false}' > deploy/vercel.json
-      
     - name: Deploy to Vercel
       continue-on-error: true
       run: |
-        cd deploy
-        vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --yes --name arkaclone
+        cd dist
+        # Check what files are here
+        echo "Files in dist directory:"
+        ls -la
+        # Deploy directly from dist
+        vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --yes
       env:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
