@@ -95,11 +95,13 @@ func setup_game():
 
 func create_bricks():
 	var screen_size = get_viewport().get_visible_rect().size
-	var brick_width = 80.0
 	var brick_height = 30.0
-	var padding = 5.0
 	var rows = 6
-	var cols = int(screen_size.x / (brick_width + padding))
+	var cols = 12  # Fixed number of columns to ensure full coverage
+	
+	# Calculate brick width to fill the entire screen width with no gaps
+	var total_padding = 10.0  # Small padding on left and right edges
+	var brick_width = (screen_size.x - total_padding) / cols
 	
 	var colors = [Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.PURPLE]
 	
@@ -111,15 +113,17 @@ func create_bricks():
 			var hits_required = rows - row  # Row 0 = 6 hits, Row 5 = 1 hit
 			var money_value = (rows - row) * 10  # Row 0 = $60, Row 5 = $10
 			
-			
-			# Position the brick first
+			# Position bricks to fill the full width with no gaps
 			brick.position = Vector2(
-				col * (brick_width + padding) + brick_width / 2 + padding,
-				row * (brick_height + padding) + brick_height / 2 + 50
+				col * brick_width + brick_width / 2 + (total_padding / 2),
+				row * (brick_height + 2) + brick_height / 2 + 50
 			)
 			
 			# Add to scene tree first
 			add_child(brick)
+			
+			# Set brick width to match our calculated width
+			brick.brick_width = brick_width
 			
 			# Then set up brick after it's in the scene tree
 			brick.setup_brick(colors[row % colors.size()], hits_required, money_value)
