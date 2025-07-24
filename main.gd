@@ -3,6 +3,7 @@ extends Node2D
 var paddle_scene = preload("res://paddle.tscn")
 var ball_scene = preload("res://ball.tscn")
 var brick_scene = preload("res://brick.tscn")
+var money_drop_scene = preload("res://money_drop.tscn")
 
 var paddle
 var ball
@@ -12,11 +13,16 @@ var lives = 3
 
 @onready var score_label = $UI/ScoreLabel
 @onready var lives_label = $UI/LivesLabel
+@onready var money_label = $UI/MoneyLabel
 @onready var game_over_label = $UI/GameOverLabel
 
 func _ready():
 	create_boundaries()
 	setup_game()
+	
+	# Connect to money system
+	MoneyManager.money_changed.connect(_on_money_changed)
+	update_ui()
 
 func create_boundaries():
 	# Create invisible walls around the screen
@@ -95,12 +101,25 @@ func create_bricks():
 	for row in range(rows):
 		for col in range(cols):
 			var brick = brick_scene.instantiate()
-			brick.brick_color = colors[row % colors.size()]
+			
+			# Deeper rows require more hits and give more money
+			var hits_required = 1
+			var money_value = 10
+			
+			if row >= 4:  # Back two rows
+				hits_required = 3
+				money_value = 50
+			elif row >= 2:  # Middle two rows
+				hits_required = 2
+				money_value = 25
+			
+			brick.setup_brick(colors[row % colors.size()], hits_required, money_value)
 			brick.position = Vector2(
 				col * (brick_width + padding) + brick_width / 2 + padding,
 				row * (brick_height + padding) + brick_height / 2 + 50
 			)
 			brick.destroyed.connect(_on_brick_destroyed)
+			brick.money_dropped.connect(_on_money_dropped)
 			bricks.append(brick)
 			add_child(brick)
 
@@ -141,6 +160,15 @@ func reset_ball():
 func update_ui():
 	score_label.text = "Score: " + str(score)
 	lives_label.text = "Lives: " + str(lives)
+	money_label.text = "Money: $" + str(MoneyManager.get_money())
+
+func _on_money_changed(new_amount: int):
+	money_label.text = "Money: $" + str(new_amount)
+
+func _on_money_dropped(amount: int, pos: Vector2):
+	var money_drop = money_drop_scene.instantiate()
+	money_drop.setup_money_drop(amount, pos)
+	add_child(money_drop)
 
 func _input(event):
 	if (event.is_action_pressed("ui_accept") or event.is_action_pressed("click")) and game_over_label.visible:

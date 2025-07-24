@@ -3,11 +3,13 @@
 [ext_resource type="Script" path="res://main_menu.gd" id="1"]
 
 [node name="root" type="Control"]
-script = ExtResource("1")
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
 
 [node name="MenuContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -21,3 +23,13 @@ layout_mode = 2
 [node name="FireworksLeft" type="GPUParticles2D" parent="."]
 
 [node name="FireworksRight" type="GPUParticles2D" parent="."]
+
+[node name="MoneyDisplay" type="Label" parent="."]
+layout_mode = 0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -150.0
+offset_right = -10.0
+offset_bottom = 30.0
+text = "Money: $0"

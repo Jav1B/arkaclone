@@ -2,6 +2,7 @@ extends Control
 
 @onready var title_label = $MenuContainer/TitleLabel
 @onready var start_button = $MenuContainer/StartButton
+@onready var money_display = $MoneyDisplay
 @onready var fireworks_left = $FireworksLeft
 @onready var fireworks_right = $FireworksRight
 
@@ -38,8 +39,20 @@ func _ready():
 	# Set up fireworks
 	setup_fireworks()
 	
-	# Connect button signal
+	# Set up money display
+	money_display.text = "Money: $" + str(MoneyManager.get_money())
+	money_display.add_theme_font_size_override("font_size", 24)
+	money_display.add_theme_color_override("font_color", Color.GOLD)
+	money_display.anchors_preset = Control.PRESET_TOP_RIGHT
+	money_display.anchor_left = 1.0
+	money_display.anchor_right = 1.0
+	money_display.offset_left = -150
+	money_display.offset_right = -10
+	money_display.offset_bottom = 30
+	
+	# Connect signals
 	start_button.pressed.connect(_on_start_pressed)
+	MoneyManager.money_changed.connect(_on_money_changed)
 	
 	# Start title animation
 	animate_title()
@@ -107,6 +120,9 @@ func update_title_scale(scale: float):
 
 func _on_start_pressed():
 	get_tree().change_scene_to_file("res://main.tscn")
+
+func _on_money_changed(new_amount: int):
+	money_display.text = "Money: $" + str(new_amount)
 
 func _input(event):
 	# Handle touch/click to start game
