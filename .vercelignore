@@ -1,0 +1,12 @@
+package.json
+package-lock.json
+node_modules
+build.sh
+.github
+.git
+*.gd
+*.tscn
+*.cfg
+*.godot
+.import
+*.tmp
