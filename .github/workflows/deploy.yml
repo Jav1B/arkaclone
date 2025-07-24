@@ -15,9 +15,18 @@ jobs:
       uses: actions/checkout@v3
       
     - name: Setup Godot
-      uses: lihop/setup-godot@v2
-      with:
-        godot-version: '4.4.1'
+      run: |
+        wget -q https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
+        unzip -q Godot_v4.4.1-stable_linux.x86_64.zip
+        chmod +x Godot_v4.4.1-stable_linux.x86_64
+        sudo mv Godot_v4.4.1-stable_linux.x86_64 /usr/local/bin/godot
+        
+        # Download export templates
+        wget -q https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
+        mkdir -p ~/.local/share/godot/export_templates/4.4.1.stable
+        unzip -q Godot_v4.4.1-stable_export_templates.tpz -d ~/.local/share/godot/export_templates/4.4.1.stable
+        mv ~/.local/share/godot/export_templates/4.4.1.stable/templates/* ~/.local/share/godot/export_templates/4.4.1.stable/
+        rmdir ~/.local/share/godot/export_templates/4.4.1.stable/templates
         
     - name: Verify Godot installation
       run: |
