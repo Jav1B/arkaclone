@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://main_menu.gd" id="1"]
+
+[node name="root" type="Control"]
+script = ExtResource("1")
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="MenuContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+
+[node name="TitleLabel" type="Label" parent="MenuContainer"]
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="MenuContainer"]
+layout_mode = 2
+
+[node name="FireworksLeft" type="GPUParticles2D" parent="."]
+
+[node name="FireworksRight" type="GPUParticles2D" parent="."]

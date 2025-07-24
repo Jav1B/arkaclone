@@ -121,14 +121,14 @@ func _on_life_lost():
 	update_ui()
 	
 	if lives <= 0:
-		game_over_label.text = "GAME OVER!\nTap to restart"
+		game_over_label.text = "GAME OVER!\nTap to return to menu"
 		game_over_label.visible = true
 	else:
 		# Reset ball position and restart
 		reset_ball()
 
 func game_won():
-	game_over_label.text = "YOU WIN!\nTap to restart"
+	game_over_label.text = "YOU WIN!\nTap to return to menu"
 	game_over_label.visible = true
 
 func reset_ball():
@@ -144,4 +144,4 @@ func update_ui():
 
 func _input(event):
 	if (event.is_action_pressed("ui_accept") or event.is_action_pressed("click")) and game_over_label.visible:
-		get_tree().reload_current_scene()
+		get_tree().change_scene_to_file("res://main_menu.tscn")

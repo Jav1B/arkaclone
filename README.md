@@ -1,15 +1,17 @@
-# Arkanoid Clone
+# MIERDOLO - Arkanoid Clone
 
-A classic Arkanoid/Breakout game built with Godot 4.4.
+A classic Arkanoid/Breakout game built with Godot 4.4 with an epic main menu!
 
 ## Features
 
+- **Main Menu**: Animated "MIERDOLO" title with fireworks effects
 - Physics-based ball bouncing
 - Player-controlled paddle
 - Destructible brick grid with multiple colors
 - Score tracking and lives system
 - Game over and win conditions
-- Restart functionality
+- Return to main menu functionality
+- Full touch/mobile support
 
 ## Controls
 
@@ -18,9 +20,10 @@ A classic Arkanoid/Breakout game built with Godot 4.4.
 - **Enter/Space**: Restart game after game over
 
 ### Touch/Mobile
-- **Left half of screen**: Move paddle left
-- **Right half of screen**: Move paddle right
-- **Tap anywhere**: Restart game after game over
+- **Tap START GAME button**: Start the game from main menu
+- **Left half of screen**: Move paddle left (during gameplay)
+- **Right half of screen**: Move paddle right (during gameplay)
+- **Tap anywhere**: Return to main menu after game over/win
 
 ## Local Development
 
