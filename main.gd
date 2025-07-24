@@ -72,7 +72,7 @@ func setup_game():
 	ball = ball_scene.instantiate()
 	ball.position = Vector2(screen_size.x / 2, screen_size.y / 2)
 	ball.brick_hit.connect(_on_brick_hit)
-	ball.game_over.connect(_on_game_over)
+	ball.life_lost.connect(_on_life_lost)
 	add_child(ball)
 	
 	# Create bricks
@@ -116,7 +116,7 @@ func _on_brick_destroyed():
 	if remaining_bricks.size() == 0:
 		game_won()
 
-func _on_game_over():
+func _on_life_lost():
 	lives -= 1
 	update_ui()
 	
@@ -124,15 +124,19 @@ func _on_game_over():
 		game_over_label.text = "GAME OVER!\nTap to restart"
 		game_over_label.visible = true
 	else:
-		# Reset ball position
-		ball.position = Vector2(get_viewport().get_visible_rect().size.x / 2, get_viewport().get_visible_rect().size.y / 2)
-		ball.linear_velocity = Vector2.ZERO
-		await get_tree().create_timer(1.0).timeout
-		ball.start_ball()
+		# Reset ball position and restart
+		reset_ball()
 
 func game_won():
 	game_over_label.text = "YOU WIN!\nTap to restart"
 	game_over_label.visible = true
+
+func reset_ball():
+	var screen_size = get_viewport().get_visible_rect().size
+	ball.position = Vector2(screen_size.x / 2, screen_size.y / 2)
+	ball.linear_velocity = Vector2.ZERO
+	await get_tree().create_timer(1.0).timeout
+	ball.start_ball()
 
 func update_ui():
 	score_label.text = "Score: " + str(score)

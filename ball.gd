@@ -4,7 +4,9 @@ extends RigidBody2D
 @export var ball_radius = 10.0
 
 signal brick_hit(brick)
-signal game_over
+signal life_lost
+
+var has_fallen = false
 
 func _ready():
 	# Create a simple white circle for the ball
@@ -47,6 +49,8 @@ func _ready():
 	body_entered.connect(_on_body_entered)
 	
 func start_ball():
+	# Reset the fallen state
+	has_fallen = false
 	# Start the ball moving at an angle
 	var start_velocity = Vector2(randf_range(-1, 1), -1).normalized() * ball_speed
 	linear_velocity = start_velocity
@@ -58,8 +62,9 @@ func _on_body_entered(body):
 	
 func _physics_process(_delta):
 	# Check if ball went off screen bottom
-	if position.y > get_viewport().get_visible_rect().size.y + 50:
-		game_over.emit()
+	if position.y > get_viewport().get_visible_rect().size.y + 50 and not has_fallen:
+		has_fallen = true
+		life_lost.emit()
 	
 	# Keep ball speed constant
 	if linear_velocity.length() > 0:
