@@ -1,0 +1,17 @@
+{
+  "name": "arkanoid-clone",
+  "version": "1.0.0",
+  "description": "Arkanoid clone built with Godot 4.4",
+  "scripts": {
+    "build": "bash build.sh",
+    "dev": "godot --path . --debug",
+    "export": "godot --headless --export-release \"Web\" dist/index.html"
+  },
+  "keywords": ["godot", "game", "arkanoid", "breakout"],
+  "author": "Generated with Claude Code",
+  "license": "MIT",
+  "devDependencies": {},
+  "engines": {
+    "node": ">=16"
+  }
+}
