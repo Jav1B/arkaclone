@@ -24,7 +24,7 @@ func _ready():
 	brick_material.friction = 0.0
 	physics_material_override = brick_material
 	
-	update_brick_appearance()
+	# Don't call update_brick_appearance here - wait for setup_brick()
 
 func update_brick_appearance():
 	# Create a colored rectangle for the brick

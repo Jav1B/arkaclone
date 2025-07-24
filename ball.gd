@@ -76,10 +76,11 @@ func reset_for_new_life():
 	speed_multiplier = 1.0
 	freeze = true
 	linear_velocity = Vector2.ZERO
+	angular_velocity = 0.0
 	
-	# Position above paddle
+	# Always position above paddle center
 	var screen_size = get_viewport().get_visible_rect().size
-	position = Vector2(screen_size.x / 2, screen_size.y - 100)
+	global_position = Vector2(screen_size.x / 2, screen_size.y - 100)
 
 func get_current_speed() -> float:
 	return current_speed * speed_multiplier
@@ -106,8 +107,9 @@ func _physics_process(_delta):
 	# Check if ball went off screen bottom
 	if position.y > get_viewport().get_visible_rect().size.y + 50 and not has_fallen:
 		has_fallen = true
-		# Stop the ball immediately
+		# Stop the ball immediately and prepare for reset
 		linear_velocity = Vector2.ZERO
+		angular_velocity = 0.0
 		freeze = true
 		life_lost.emit()
 		return

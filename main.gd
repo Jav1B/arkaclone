@@ -141,7 +141,8 @@ func _on_life_lost():
 		game_over_label.text = "GAME OVER!\nTap to return to menu"
 		game_over_label.visible = true
 	else:
-		# Reset ball position and restart
+		# Reset ball position and restart immediately
+		await get_tree().process_frame  # Wait one frame for physics to settle
 		reset_ball()
 
 func game_won():
