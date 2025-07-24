@@ -12,6 +12,18 @@ signal money_dropped(amount, pos)
 var current_hits = 0
 
 func _ready():
+	# Set up collision shape first
+	var collision = $BrickCollision
+	var shape = RectangleShape2D.new()
+	shape.size = Vector2(brick_width, brick_height)
+	collision.shape = shape
+	
+	# Add bouncy physics material
+	var brick_material = PhysicsMaterial.new()
+	brick_material.bounce = 1.0
+	brick_material.friction = 0.0
+	physics_material_override = brick_material
+	
 	update_brick_appearance()
 
 func update_brick_appearance():
@@ -48,18 +60,6 @@ func add_cracks_to_image(image: Image, damage_factor: float):
 		for y in range(height):
 			if y % 2 == 0:  # Sparse crack
 				image.set_pixel(width / 2, y, Color.DARK_GRAY)
-	
-	# Set up collision shape
-	var collision = $BrickCollision
-	var shape = RectangleShape2D.new()
-	shape.size = Vector2(brick_width, brick_height)
-	collision.shape = shape
-	
-	# Add bouncy physics material
-	var brick_material = PhysicsMaterial.new()
-	brick_material.bounce = 1.0
-	brick_material.friction = 0.0
-	physics_material_override = brick_material
 
 func hit():
 	current_hits += 1
