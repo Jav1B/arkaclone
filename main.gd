@@ -107,16 +107,9 @@ func create_bricks():
 		for col in range(cols):
 			var brick = brick_scene.instantiate()
 			
-			# Deeper rows require more hits and give more money
-			var hits_required = 1
-			var money_value = 10
-			
-			if row >= 4:  # Back two rows
-				hits_required = 3
-				money_value = 50
-			elif row >= 2:  # Middle two rows
-				hits_required = 2
-				money_value = 25
+			# Progressive difficulty: each row deeper requires one more hit and gives more money
+			var hits_required = row + 1  # Row 0 = 1 hit, Row 1 = 2 hits, etc.
+			var money_value = (row + 1) * 10  # Row 0 = $10, Row 1 = $20, Row 2 = $30, etc.
 			
 			brick.setup_brick(colors[row % colors.size()], hits_required, money_value)
 			brick.position = Vector2(
