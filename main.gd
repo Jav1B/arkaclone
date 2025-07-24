@@ -14,6 +14,7 @@ var lives = 3
 @onready var score_label = $UI/ScoreLabel
 @onready var lives_label = $UI/LivesLabel
 @onready var money_label = $UI/MoneyLabel
+@onready var launch_label = $UI/LaunchLabel
 @onready var game_over_label = $UI/GameOverLabel
 
 func _ready():
@@ -22,7 +23,12 @@ func _ready():
 	
 	# Connect to money system
 	MoneyManager.money_changed.connect(_on_money_changed)
+	
+	# Connect to ball state changes
+	ball.ball_launched.connect(_on_ball_launched)
+	
 	update_ui()
+	show_launch_instruction()
 
 func create_boundaries():
 	# Create invisible walls around the screen
@@ -84,9 +90,8 @@ func setup_game():
 	# Create bricks
 	create_bricks()
 	
-	# Start ball after a short delay
-	await get_tree().create_timer(1.0).timeout
-	ball.start_ball()
+	# Set ball to waiting state at start
+	ball.reset_for_new_life()
 
 func create_bricks():
 	var screen_size = get_viewport().get_visible_rect().size
@@ -151,11 +156,15 @@ func game_won():
 	game_over_label.visible = true
 
 func reset_ball():
-	var screen_size = get_viewport().get_visible_rect().size
-	ball.position = Vector2(screen_size.x / 2, screen_size.y / 2)
-	ball.linear_velocity = Vector2.ZERO
-	await get_tree().create_timer(1.0).timeout
-	ball.start_ball()
+	ball.reset_for_new_life()
+	show_launch_instruction()
+
+func show_launch_instruction():
+	launch_label.text = "TAP TO LAUNCH BALL"
+	launch_label.visible = true
+
+func _on_ball_launched():
+	launch_label.visible = false
 
 func update_ui():
 	score_label.text = "Score: " + str(score)

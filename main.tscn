@@ -28,6 +28,20 @@ offset_top = -23.0
 offset_right = 100.0
 text = "Money: $0"
 
+[node name="LaunchLabel" type="Label" parent="UI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = 50.0
+offset_right = 100.0
+offset_bottom = 73.0
+text = "TAP TO LAUNCH BALL"
+horizontal_alignment = 1
+visible = false
+
 [node name="GameOverLabel" type="Label" parent="UI"]
 anchors_preset = 8
 anchor_left = 0.5

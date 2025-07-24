@@ -6,10 +6,12 @@ extends RigidBody2D
 signal brick_hit(brick)
 signal life_lost
 signal paddle_hit
+signal ball_launched
 
 var has_fallen = false
 var current_speed = 0.0
 var speed_multiplier = 1.0
+var is_waiting_for_launch = false
 
 func _ready():
 	# Calculate speed based on screen resolution for consistent gameplay
@@ -57,12 +59,27 @@ func _ready():
 	body_entered.connect(_on_body_entered)
 	
 func start_ball():
-	# Reset the fallen state and speed multiplier
+	# Reset all states
 	has_fallen = false
+	is_waiting_for_launch = false
 	speed_multiplier = 1.0
+	freeze = false
 	# Start the ball moving at an angle
 	var start_velocity = Vector2(randf_range(-1, 1), -1).normalized() * get_current_speed()
 	linear_velocity = start_velocity
+	ball_launched.emit()
+
+func reset_for_new_life():
+	# Reset the ball for a new life, positioned above paddle
+	has_fallen = false
+	is_waiting_for_launch = true
+	speed_multiplier = 1.0
+	freeze = true
+	linear_velocity = Vector2.ZERO
+	
+	# Position above paddle
+	var screen_size = get_viewport().get_visible_rect().size
+	position = Vector2(screen_size.x / 2, screen_size.y - 100)
 
 func get_current_speed() -> float:
 	return current_speed * speed_multiplier
@@ -80,11 +97,21 @@ func _on_body_entered(body):
 			paddle_hit.emit()
 	
 func _physics_process(_delta):
+	# Handle waiting for launch
+	if is_waiting_for_launch:
+		if Input.is_action_just_pressed("click") or Input.is_action_just_pressed("ui_accept"):
+			start_ball()
+		return
+	
 	# Check if ball went off screen bottom
 	if position.y > get_viewport().get_visible_rect().size.y + 50 and not has_fallen:
 		has_fallen = true
+		# Stop the ball immediately
+		linear_velocity = Vector2.ZERO
+		freeze = true
 		life_lost.emit()
+		return
 	
-	# Keep ball speed constant at current level
-	if linear_velocity.length() > 0:
+	# Keep ball speed constant at current level (only if not fallen)
+	if not has_fallen and linear_velocity.length() > 0:
 		linear_velocity = linear_velocity.normalized() * get_current_speed()
