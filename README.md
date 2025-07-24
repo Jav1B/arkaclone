@@ -13,8 +13,14 @@ A classic Arkanoid/Breakout game built with Godot 4.4.
 
 ## Controls
 
+### Keyboard
 - **Left/Right Arrow Keys**: Move paddle
 - **Enter/Space**: Restart game after game over
+
+### Touch/Mobile
+- **Left half of screen**: Move paddle left
+- **Right half of screen**: Move paddle right
+- **Tap anywhere**: Restart game after game over
 
 ## Local Development
 

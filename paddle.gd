@@ -23,10 +23,20 @@ func _ready():
 func _physics_process(_delta):
 	velocity = Vector2.ZERO
 	
+	# Handle keyboard input
 	if Input.is_action_pressed("ui_left"):
 		velocity.x = -speed
 	elif Input.is_action_pressed("ui_right"):
 		velocity.x = speed
+	
+	# Handle touch/mouse input
+	if Input.is_action_pressed("click"):
+		var screen_size = get_viewport().get_visible_rect().size
+		var touch_pos = get_global_mouse_position()
+		if touch_pos.x < screen_size.x / 2:
+			velocity.x = -speed
+		else:
+			velocity.x = speed
 	
 	move_and_slide()
 	
